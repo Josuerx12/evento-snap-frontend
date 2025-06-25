@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter, Playfair_Display } from "next/font/google";
 import "./globals.css";
 import Footer from "@/components/Footer";
+import ReactQueryProvider from "@/components/providers/ReactQueryProvider";
 
 const playfair = Playfair_Display({
   variable: "--font-playfair",
@@ -27,8 +28,10 @@ export default function RootLayout({
   return (
     <html lang="pt">
       <body className={`${playfair.variable} ${inter.variable} antialiased`}>
-        {children}
-        <Footer />
+        <ReactQueryProvider>
+          {children}
+          <Footer />
+        </ReactQueryProvider>
       </body>
     </html>
   );
