@@ -4,6 +4,7 @@ import z from "zod";
 export const SignUpSchema = z.object({
   name: z.string({ message: "Nome deve ser informado." }),
   email: z.string({ message: "E-mail deve ser informado." }),
+  phone: z.string({ message: "Telefone deve ser informado." }),
   accountType: z.enum(["personal", "company"], {
     message: "Tipo da conta deve ser fisica ou juridica.",
   }),

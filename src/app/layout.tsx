@@ -9,11 +9,13 @@ import Navbar from "@/components/Navbar";
 const playfair = Playfair_Display({
   variable: "--font-playfair",
   weight: ["800", "700", "600"],
+  subsets: ["latin"],
 });
 
 const inter = Inter({
   variable: "--font-inter",
   weight: ["300", "400", "500", "600", "700"],
+  subsets: ["latin"],
 });
 
 export const metadata: Metadata = {

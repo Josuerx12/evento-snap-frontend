@@ -5,7 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "react-toastify";
-import { signIn } from "./action/signIn";
+import { signIn, SignInErrorsT } from "./action/signIn";
 import { useRouter } from "next/navigation";
 
 const schema = z.object({
@@ -28,7 +28,11 @@ export default function LoginPage() {
 
   const router = useRouter();
 
-  const { isPending, error, mutateAsync } = useMutation({
+  const { isPending, error, mutateAsync } = useMutation<
+    void,
+    SignInErrorsT,
+    FormData
+  >({
     mutationFn: signIn,
     mutationKey: ["signIn"],
     onError: () => {

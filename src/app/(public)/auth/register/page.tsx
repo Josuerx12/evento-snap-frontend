@@ -60,7 +60,10 @@ export default function RegisterPage() {
     replacement: { _: /\d/ },
   });
 
-  console.log(error);
+  const phoneInputRef = useMask({
+    mask: "55 (__) _____-____",
+    replacement: { _: /\d/ },
+  });
 
   return (
     <main className="max-w-md min-h-[90vh] mx-auto py-20 px-4 animate-fade-in">
@@ -100,6 +103,27 @@ export default function RegisterPage() {
           {error?.errors?.email && (
             <p className="text-red-500 text-sm mt-1">
               {error?.errors?.email[0]}
+            </p>
+          )}
+        </div>
+
+        <div>
+          <label className="block mb-1">Telefone de contato</label>
+          <input
+            disabled={isPending}
+            ref={phoneInputRef}
+            onChange={(e) => {
+              setValue("phone", e.target.value);
+            }}
+            type="tel"
+            className="w-full px-4 py-2 border rounded"
+          />
+          {errors.phone && (
+            <p className="text-red-500 text-sm mt-1">{errors.phone.message}</p>
+          )}
+          {error?.errors?.phone && (
+            <p className="text-red-500 text-sm mt-1">
+              {error?.errors?.phone[0]}
             </p>
           )}
         </div>

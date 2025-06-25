@@ -1,6 +1,12 @@
 import { api } from "@/services/api.service";
 import Cookies from "js-cookie";
 
+export type SignInErrorsT = {
+  message: string;
+  statusCode: number;
+  errors?: any[];
+};
+
 export async function signIn({
   login,
   password,
@@ -21,8 +27,17 @@ export async function signIn({
     Cookies.set("eventosnap-token", res.data.accessToken, {
       expires: res.data.exp,
     });
-  } catch (error) {
+
+    api.defaults.headers.common.Authorization = `Bearer ${res.data.accessToken}`;
+  } catch (error: any) {
+    if (error?.response?.data) {
+      console.log(error.response.data);
+
+      throw error.response.data;
+    }
+
     console.log(error);
+
     throw error;
   }
 }
