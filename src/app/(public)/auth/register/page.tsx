@@ -1,31 +1,69 @@
 "use client";
+
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import z from "zod";
-
-const schema = z.object({
-  name: z.string().min(2, "Nome obrigatório"),
-  email: z.string().email("Email inválido"),
-  password: z.string().min(6, "Mínimo 6 caracteres"),
-});
-
-type FormData = z.infer<typeof schema>;
+import { useForm, useWatch } from "react-hook-form";
+import {
+  signUp,
+  SignUpErrors,
+  SignUpInput,
+  SignUpSchema,
+} from "./action/signUp";
+import { useMask } from "@react-input/mask";
+import { useMutation } from "@tanstack/react-query";
+import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
 
 export default function RegisterPage() {
   const {
     register,
     handleSubmit,
+    control,
+    setValue,
     formState: { errors },
-  } = useForm<FormData>({
-    resolver: zodResolver(schema),
+  } = useForm<SignUpInput>({
+    resolver: zodResolver(SignUpSchema),
+    defaultValues: {
+      accountType: "personal",
+    },
   });
 
-  const onSubmit = (data: FormData) => {
-    console.log("Cadastro:", data);
+  const router = useRouter();
+
+  const { error, mutateAsync, isPending } = useMutation<
+    void,
+    SignUpErrors,
+    SignUpInput
+  >({
+    mutationKey: ["signUp"],
+    mutationFn: signUp,
+    onSuccess: () => {
+      toast.success("Conta criada com sucesso! Faça login.");
+      router.push("/auth/login");
+    },
+    onError: () => {
+      toast.error("Error ao criar conta verifique suas credenciais.");
+    },
+  });
+
+  const accountType = useWatch({ control, name: "accountType" });
+
+  const onSubmit = async (data: SignUpInput) => {
+    await mutateAsync(data);
   };
 
+  const cpfMask = "___.___.___-__";
+  const cnpjMask = "__.___.___/____-__";
+  const currentMask = accountType === "company" ? cnpjMask : cpfMask;
+
+  const documentInputRef = useMask({
+    mask: currentMask,
+    replacement: { _: /\d/ },
+  });
+
+  console.log(error);
+
   return (
-    <main className="max-w-md mx-auto py-20 px-4 animate-fade-in">
+    <main className="max-w-md min-h-[90vh] mx-auto py-20 px-4 animate-fade-in">
       <h1 className="text-3xl font-serif font-bold mb-8 text-center">
         Criar conta no EventoSnap
       </h1>
@@ -33,6 +71,7 @@ export default function RegisterPage() {
         <div>
           <label className="block mb-1">Nome</label>
           <input
+            disabled={isPending}
             {...register("name")}
             type="text"
             className="w-full px-4 py-2 border rounded"
@@ -40,10 +79,17 @@ export default function RegisterPage() {
           {errors.name && (
             <p className="text-red-500 text-sm mt-1">{errors.name.message}</p>
           )}
+          {error?.errors?.name && (
+            <p className="text-red-500 text-sm mt-1">
+              {error?.errors?.name[0]}
+            </p>
+          )}
         </div>
+
         <div>
           <label className="block mb-1">Email</label>
           <input
+            disabled={isPending}
             {...register("email")}
             type="email"
             className="w-full px-4 py-2 border rounded"
@@ -51,10 +97,67 @@ export default function RegisterPage() {
           {errors.email && (
             <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>
           )}
+          {error?.errors?.email && (
+            <p className="text-red-500 text-sm mt-1">
+              {error?.errors?.email[0]}
+            </p>
+          )}
         </div>
+
+        <div>
+          <label className="block mb-1">Tipo de Conta</label>
+          <select
+            disabled={isPending}
+            {...register("accountType")}
+            className="w-full px-4 py-2 border rounded"
+          >
+            <option value="personal">Pessoa Física</option>
+            <option value="company">Pessoa Jurídica</option>
+          </select>
+          {errors.accountType && (
+            <p className="text-red-500 text-sm mt-1">
+              {errors.accountType.message}
+            </p>
+          )}
+          {error?.errors?.accountType && (
+            <p className="text-red-500 text-sm mt-1">
+              {error?.errors?.accountType[0]}
+            </p>
+          )}
+        </div>
+
+        <div>
+          <label className="block mb-1">Documento</label>
+          <input
+            disabled={isPending}
+            ref={documentInputRef}
+            onChange={(e) => {
+              setValue("document", e.target.value);
+            }}
+            type="text"
+            className="w-full px-4 py-2 border rounded"
+          />
+          {errors.document && (
+            <p className="text-red-500 text-sm mt-1">
+              {errors.document.message}
+            </p>
+          )}
+          {error?.errors?.document && (
+            <p className="text-red-500 text-sm mt-1">
+              {error?.errors?.document[0]}
+            </p>
+          )}
+          {error?.errors?.documento && (
+            <p className="text-red-500 text-sm mt-1">
+              {error?.errors?.documento[0]}
+            </p>
+          )}
+        </div>
+
         <div>
           <label className="block mb-1">Senha</label>
           <input
+            disabled={isPending}
             {...register("password")}
             type="password"
             className="w-full px-4 py-2 border rounded"
@@ -64,8 +167,19 @@ export default function RegisterPage() {
               {errors.password.message}
             </p>
           )}
+          {error?.errors?.password && (
+            <p className="text-red-500 text-sm mt-1">
+              {error?.errors?.password[0]}
+            </p>
+          )}
         </div>
+
+        {error?.message && (
+          <p className="bg-red-500 text-white p-2 rounded">{error.message}</p>
+        )}
+
         <button
+          disabled={isPending}
           type="submit"
           className="bg-[#C19B5C] text-white px-6 py-2 rounded w-full hover:opacity-90 transition"
         >

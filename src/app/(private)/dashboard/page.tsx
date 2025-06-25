@@ -1,6 +1,9 @@
+import { getUser } from "@/services/auth.service";
 import React from "react";
 
-const DashboardPage = () => {
+const DashboardPage = async () => {
+  await getUser();
+
   return <div>DashboardPage</div>;
 };
 

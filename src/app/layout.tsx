@@ -3,6 +3,8 @@ import { Inter, Playfair_Display } from "next/font/google";
 import "./globals.css";
 import Footer from "@/components/Footer";
 import ReactQueryProvider from "@/components/providers/ReactQueryProvider";
+import MenuContext from "@/context/MenuContext";
+import Navbar from "@/components/Navbar";
 
 const playfair = Playfair_Display({
   variable: "--font-playfair",
@@ -20,7 +22,7 @@ export const metadata: Metadata = {
     "Compartilhe fotos de eventos e casamentos com seus convidados de forma elegante e prática.",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
@@ -29,8 +31,11 @@ export default function RootLayout({
     <html lang="pt">
       <body className={`${playfair.variable} ${inter.variable} antialiased`}>
         <ReactQueryProvider>
-          {children}
-          <Footer />
+          <MenuContext>
+            <Navbar />
+            {children}
+            <Footer />
+          </MenuContext>
         </ReactQueryProvider>
       </body>
     </html>

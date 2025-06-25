@@ -5,8 +5,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "react-toastify";
-import { useRouter } from "next/navigation";
 import { signIn } from "./action/signIn";
+import { useRouter } from "next/navigation";
 
 const schema = z.object({
   login: z.string({ message: "Login deve ser informado." }),
@@ -36,7 +36,7 @@ export default function LoginPage() {
     },
     onSuccess: () => {
       toast.success("Login efetuado com sucesso!");
-      router.push("/dashboard");
+      router.refresh();
     },
   });
 
@@ -45,7 +45,7 @@ export default function LoginPage() {
   };
 
   return (
-    <main className="max-w-md mx-auto py-20 px-4 animate-fade-in ">
+    <main className="max-w-md min-h-[90vh] mx-auto py-20 px-4 animate-fade-in ">
       <h1 className="text-3xl font-serif font-bold mb-8 text-center">
         Entrar no EventoSnap
       </h1>

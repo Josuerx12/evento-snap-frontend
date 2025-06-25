@@ -2,8 +2,8 @@ import Link from "next/link";
 
 export default function Footer() {
   return (
-    <footer className="bg-eventosnap-dark text-eventosnap-cream py-6 mt-auto">
-      <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row justify-between">
+    <footer className="bg-eventosnap-dark h-[10vh]  text-eventosnap-beige">
+      <div className="max-w-7xl mx-auto px-4 flex m-auto w-full h-full flex-col sm:flex-row justify-between items-center">
         <p className="mb-4 sm:mb-0">
           &copy; {new Date().getFullYear()} EventoSnap. Todos os direitos
           reservados.
