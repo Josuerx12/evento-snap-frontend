@@ -5,7 +5,10 @@ export default async function middleware(req: NextRequest) {
 
   const token = req.cookies.get("eventosnap-token");
 
-  if (!token && pathname.includes("dashboard")) {
+  if (
+    !token &&
+    (pathname.includes("dashboard") || pathname.includes("galerias"))
+  ) {
     const url = req.nextUrl.clone();
     url.pathname = "/auth/login";
     return NextResponse.redirect(url);
@@ -13,7 +16,7 @@ export default async function middleware(req: NextRequest) {
 
   if (token && pathname.includes("auth")) {
     const url = req.nextUrl.clone();
-    url.pathname = "/dashboard";
+    url.pathname = "/galerias";
     return NextResponse.redirect(url);
   }
 

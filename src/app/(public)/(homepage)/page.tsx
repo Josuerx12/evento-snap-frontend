@@ -91,13 +91,13 @@ const HomePage = async () => {
               </p>
               <div className="flex flex-wrap justify-center gap-4">
                 <Link
-                  href="/dashboard"
+                  href="/galerias"
                   className="bg-white text-eventosnap-dark px-6 py-3 rounded text-lg hover:opacity-90 transition"
                 >
                   Ver Minhas Galerias
                 </Link>
                 <Link
-                  href="/galeria/nova"
+                  href="/galerias/nova"
                   className="border border-white text-white px-6 py-3 rounded text-lg hover:bg-white hover:text-eventosnap-dark transition"
                 >
                   Criar Nova Galeria

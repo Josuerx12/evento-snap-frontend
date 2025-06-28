@@ -10,7 +10,7 @@ export type MenuContextT = {
 export const Context = createContext<MenuContextT>({} as MenuContextT);
 
 const MenuContext = ({ children }: { children: ReactNode }) => {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(true);
 
   function handleOpen() {
     setIsOpen((prev) => !prev);
