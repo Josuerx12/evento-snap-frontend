@@ -9,17 +9,17 @@ const DashboardOpenBtn = () => {
 
   const { handleOpen, isOpen } = useMenuContext();
 
-  if (!pathname.includes("dashboard")) {
+  if (!pathname.includes("dashboard") && !pathname.includes("galerias")) {
     return;
   }
 
   return (
     <button
       onClick={handleOpen}
-      className="bg-eventosnap-beige text-eventosnap-dark rounded-full p-2 shadow transition-all duration-300 hover:bg-eventosnap-gold hover:scale-110 focus:outline-none focus:ring-2 focus:ring-eventosnap-gold"
+      className="bg-eventosnap-beige text-eventosnap-dark rounded-full cursor-pointer p-1 md:p-2 shadow transition-all duration-300 hover:bg-eventosnap-gold hover:scale-110 focus:outline-none focus:ring-2 focus:ring-eventosnap-gold"
     >
-      {!isOpen && <Menu />}
-      {isOpen && <X />}
+      {!isOpen && <Menu className="w-4 h-4 md:w-5 md:h-5" />}
+      {isOpen && <X className="w-4 h-4 md:w-5 md:h-5" />}
     </button>
   );
 };

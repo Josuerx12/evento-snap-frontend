@@ -1,12 +1,12 @@
 "use client";
-import clsx from "clsx";
 import { useMenuContext } from "@/context/MenuContext";
+import clsx from "clsx";
 import React from "react";
-import LogoutButton from "./buttons/LogoutButton";
 import AsideMenuButton from "./aside-link-buttons/AsideMenuButton";
-import { BanknoteArrowUp, ChartLine, Coins } from "lucide-react";
+import { BookImage, ChartLine, Settings } from "lucide-react";
+import LogoutButton from "./buttons/LogoutButton";
 
-const DashboardAsideMenu = () => {
+const GaleryAsideMenu = () => {
   const { isOpen } = useMenuContext();
 
   return (
@@ -20,23 +20,24 @@ const DashboardAsideMenu = () => {
       )}
     >
       <h2 className="text-xl text-center my-2 md:text-2xl font-bold text-eventosnap-dark">
-        Menu Administrativo
+        Menu de Galerias
       </h2>
 
       <ul className="mt-4 w-11/12 mx-auto flex gap-y-2 flex-col">
         <li>
-          <AsideMenuButton path="/dashboard/metricas">
-            Métricas <ChartLine className="w-6 h-6" />
+          <AsideMenuButton path="/galerias/estatisticas">
+            Estatísticas <ChartLine className="w-6 h-6" />
           </AsideMenuButton>
         </li>
         <li>
-          <AsideMenuButton path="/dashboard/planos">
-            Planos <Coins className="w-6 h-6" />
+          <AsideMenuButton path="/galerias/criar">
+            Nova Galeria <BookImage className="w-6 h-6" />
           </AsideMenuButton>
         </li>
+
         <li>
-          <AsideMenuButton path="/dashboard/assinantes">
-            Assinantes <BanknoteArrowUp className="w-6 h-6" />
+          <AsideMenuButton path="/configuracoes">
+            Configurações <Settings className="w-6 h-6" />
           </AsideMenuButton>
         </li>
         <li>
@@ -47,4 +48,4 @@ const DashboardAsideMenu = () => {
   );
 };
 
-export default DashboardAsideMenu;
+export default GaleryAsideMenu;
