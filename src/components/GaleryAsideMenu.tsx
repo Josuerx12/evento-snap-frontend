@@ -14,7 +14,7 @@ const GaleryAsideMenu = () => {
       className={clsx(
         "bg-eventosnap-beige fixed md:relative min-h-screen transition-all duration-300 overflow-hidden",
         {
-          "w-full translate-x-0 left-0 md:w-80 md:h-full px-4": isOpen,
+          "w-full translate-x-0 left-0 md:max-w-96 md:h-full px-4": isOpen,
           "w-full  -translate-x-full left-0 md:w-0": !isOpen,
         }
       )}

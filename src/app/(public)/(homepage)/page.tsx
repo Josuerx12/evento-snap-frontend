@@ -91,7 +91,7 @@ const HomePage = async () => {
               </p>
               <div className="flex flex-wrap justify-center gap-4">
                 <Link
-                  href="/galerias"
+                  href="/galerias/estatisticas"
                   className="bg-white text-eventosnap-dark px-6 py-3 rounded text-lg hover:opacity-90 transition"
                 >
                   Ver Minhas Galerias

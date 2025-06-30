@@ -4,7 +4,7 @@ import React from "react";
 const StatisticsSection = () => {
   return (
     <section className="rounded py-10 px-6 bg-eventosnap-gold">
-      <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-8">
+      <div className="max-w-[80vw] mx-auto grid md:grid-cols-2 gap-8">
         <div className="bg-white p-6 rounded-xl shadow-md">
           <h3 className="text-2xl font-bold font-serif mb-4">Seu plano</h3>
           <p className="text-lg">
