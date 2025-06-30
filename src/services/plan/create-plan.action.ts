@@ -30,7 +30,7 @@ export async function createPlan(_: any, plan: FormData) {
   if (!response.ok) {
     const errorData = await response.json();
     console.log(errorData);
-    throw new Error(errorData.message || "Failed to create plan");
+    return errorData;
   }
 
   revalidateTag("plans");

@@ -1,13 +1,12 @@
 "use server";
 import { cookies } from "next/headers";
 import { revalidateTag } from "next/cache";
-import { Plan } from "@/interfaces/plan.type";
+import { redirect, RedirectType } from "next/navigation";
 
-export async function updatePlan(
-  prevState: any,
-  plan: FormData
-): Promise<Plan> {
+export async function updatePlan(prevState: any, plan: FormData) {
   const data = Object.fromEntries(plan.entries());
+
+  console.log(data);
 
   const Cookies = await cookies();
 
@@ -21,12 +20,23 @@ export async function updatePlan(
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify(data),
+      body: JSON.stringify({
+        ...data,
+        events: parseInt(data.events as string),
+        storageLimitMb: parseInt(data.storageLimitMb as string),
+        photoLimit: parseInt(data.photoLimit as string),
+        duration: parseInt(data.duration as string),
+      }),
     }
   );
+  if (!response.ok) {
+    const errorData = await response.json();
+    console.log(errorData);
+    return errorData;
+  }
 
   revalidateTag("plans");
   revalidateTag("plan" + data.id);
 
-  return response.json();
+  redirect("/dashboard/planos/", RedirectType.push);
 }

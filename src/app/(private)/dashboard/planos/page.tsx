@@ -28,7 +28,7 @@ const PlansPage = async ({ searchParams }: { searchParams: any }) => {
     );
   }
   return (
-    <main className="w-full max-w-screen p-4">
+    <main className="w-full max-w-screen min-h-screen p-6">
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-2xl">Planos</h1>
         <div>
@@ -41,37 +41,39 @@ const PlansPage = async ({ searchParams }: { searchParams: any }) => {
         </div>
       </div>
 
-      <table className="w-full text-left border-collapse">
-        <thead>
-          <tr>
-            <th>Nome</th>
-            <th>Preço</th>
-            <th>Eventos</th>
-            <th>Armazenamento</th>
-            <th>Fotos</th>
-          </tr>
-        </thead>
-        <tbody>
-          {plans.items.map((plan) => (
-            <TableRow
-              href={"planos/" + plan.id}
-              title={"Ver detalhes do plano " + plan.name}
-              key={plan.id}
-            >
-              <td>{plan.name}</td>
-              <td>
-                {plan.price.toLocaleString("pt-BR", {
-                  style: "currency",
-                  currency: "BRL",
-                })}
-              </td>
-              <td>{plan.events}</td>
-              <td>{plan.storageLimitMb}</td>
-              <td>{plan.photoLimit}</td>
-            </TableRow>
-          ))}
-        </tbody>
-      </table>
+      <div className="overflow-x-auto">
+        <table className="w-full text-left border-collapse overflow-x-auto">
+          <thead>
+            <tr>
+              <th>Nome</th>
+              <th>Preço</th>
+              <th>Eventos</th>
+              <th>Armazenamento</th>
+              <th>Fotos</th>
+            </tr>
+          </thead>
+          <tbody>
+            {plans.items.map((plan) => (
+              <TableRow
+                href={"planos/" + plan.id}
+                title={"Ver detalhes do plano " + plan.name}
+                key={plan.id}
+              >
+                <td>{plan.name}</td>
+                <td>
+                  {plan.price.toLocaleString("pt-BR", {
+                    style: "currency",
+                    currency: "BRL",
+                  })}
+                </td>
+                <td>{plan.events}</td>
+                <td>{plan.storageLimitMb}</td>
+                <td>{plan.photoLimit}</td>
+              </TableRow>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </main>
   );
 };

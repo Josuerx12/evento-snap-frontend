@@ -1,3 +1,4 @@
+import BackButton from "@/components/buttons/BackButton";
 import { deletePlan } from "@/services/plan/delete-plan.action";
 import { getPlanById } from "@/services/plan/get-plan-by-id";
 import Link from "next/link";
@@ -14,9 +15,10 @@ const PlanPage = async ({ params }: { params: any }) => {
   const plan = await getPlanById(planId);
 
   return (
-    <main className=" w-full mx-auto p-6">
+    <main className=" w-full min-h-screen mx-auto p-6">
+      <BackButton />
       <div className="bg-white shadow-md rounded-xl p-6">
-        <div className="flex justify-between items-center mb-6">
+        <div className="flex flex-wrap justify-between items-center mb-6">
           <h1 className="text-2xl font-semibold">Plano: {plan.name}</h1>
 
           <div className="flex gap-2">
