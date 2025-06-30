@@ -1,43 +1,45 @@
-import { api } from "@/services/api.service";
-import Cookies from "js-cookie";
+"use server";
+import { cookies } from "next/headers";
+import { redirect, RedirectType } from "next/navigation";
 
 export type SignInErrorsT = {
-  message: string;
-  statusCode: number;
-  errors?: any[];
+  message?: string;
+  statusCode?: number;
+  error?: {
+    login: [string];
+    password: [string];
+  };
 };
 
-export async function signIn({
-  login,
-  password,
-}: {
-  login: string;
-  password: string;
-}) {
-  const data = {
-    login,
-    password,
-  };
-  try {
-    const res = await api.post<{ accessToken: string; exp: number }>(
-      "/auth",
-      data
-    );
+export async function signIn(prevState: any, formData: FormData) {
+  const Cookies = await cookies();
 
-    Cookies.set("eventosnap-token", res.data.accessToken, {
-      expires: res.data.exp,
-    });
+  const data = Object.fromEntries(formData.entries());
 
-    api.defaults.headers.common.Authorization = `Bearer ${res.data.accessToken}`;
-  } catch (error: any) {
-    if (error?.response?.data) {
-      console.log(error.response.data);
+  console.log("SignIn Data:", data);
 
-      throw error.response.data;
-    }
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      login: data.login,
+      password: data.password,
+    }),
+  });
 
-    console.log(error);
+  console.log("SignIn Response:", res);
 
-    throw error;
+  if (!res.ok) {
+    const errorData = await res.json();
+    console.log(errorData);
+    return errorData as SignInErrorsT;
   }
+
+  const authResponse = await res.json();
+
+  Cookies.set("eventosnap-token", authResponse.accessToken);
+
+  redirect("/galerias/estatisticas", RedirectType.push);
 }

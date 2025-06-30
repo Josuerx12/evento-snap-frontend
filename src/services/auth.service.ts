@@ -1,29 +1,33 @@
 "use server";
 
-import { UserOutput } from "@/types/user.type";
 import { cookies } from "next/headers";
 import { api } from "./api.service";
 import { redirect } from "next/navigation";
 
-export async function verifyAuth() {
+export async function getToken() {
   const Cookies = await cookies();
 
   const token = Cookies.get("eventosnap-token");
 
-  if (token) {
-    api.defaults.headers.common.Authorization = `Bearer ${token.value}`;
-  } else {
-    api.defaults.headers.common.Authorization = "";
-  }
+  return token;
 }
 
 export async function getUser() {
   try {
-    await verifyAuth();
+    const token = await getToken();
 
-    const res = await api.get<UserOutput>("/user/logged");
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user/logged`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token?.value || ""}`,
+      },
+    });
 
-    return res.data;
+    if (!res.ok) {
+      return null;
+    }
+
+    return await res.json();
   } catch (error) {
     console.log(error);
     return null;

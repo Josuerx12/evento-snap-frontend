@@ -1,97 +1,50 @@
 "use client";
 
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
-import { useMutation } from "@tanstack/react-query";
-import { toast } from "react-toastify";
-import { signIn, SignInErrorsT } from "./action/signIn";
-import { useRouter } from "next/navigation";
-
-const schema = z.object({
-  login: z.string({ message: "Login deve ser informado." }),
-  password: z
-    .string({ message: "Senha deve ser informada." })
-    .min(6, "Mínimo 6 caracteres"),
-});
-
-type FormData = z.infer<typeof schema>;
+import { useActionState } from "react";
+import { signIn } from "./action/signIn";
+import SubmitButton from "@/components/buttons/SubmitButton";
 
 export default function LoginPage() {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<FormData>({
-    resolver: zodResolver(schema),
-  });
-
-  const router = useRouter();
-
-  const { isPending, error, mutateAsync } = useMutation<
-    void,
-    SignInErrorsT,
-    FormData
-  >({
-    mutationFn: signIn,
-    mutationKey: ["signIn"],
-    onError: () => {
-      toast.error("Error ao fazer login.");
-    },
-    onSuccess: () => {
-      toast.success("Login efetuado com sucesso!");
-      router.refresh();
-    },
-  });
-
-  const onSubmit = async (data: FormData) => {
-    await mutateAsync(data);
-  };
+  const [state, dispatch, isPending] = useActionState(signIn, {});
 
   return (
     <main className="max-w-md min-h-[90vh] mx-auto py-20 px-4 animate-fade-in ">
       <h1 className="text-3xl font-serif font-bold mb-8 text-center">
         Entrar no EventoSnap
       </h1>
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+      <form action={dispatch} className="space-y-6">
         <div>
           <label className="block mb-1">Login</label>
           <input
+            name="login"
             disabled={isPending}
-            {...register("login")}
             type="login"
             className="w-full px-4 py-2 border rounded"
           />
-          {errors.login && (
-            <p className="text-red-500 text-sm mt-1">{errors.login.message}</p>
+          {state?.error?.login && (
+            <p className="text-red-500 text-sm mt-1">{state?.error?.login}</p>
           )}
         </div>
         <div>
           <label className="block mb-1">Senha</label>
           <input
+            name="password"
             disabled={isPending}
-            {...register("password")}
             type="password"
             className="w-full px-4 py-2 border rounded"
           />
-          {errors.password && (
+          {state?.error?.password && (
             <p className="text-red-500 text-sm mt-1">
-              {errors.password.message}
+              {state?.error?.password}
             </p>
           )}
         </div>
 
-        {error && (
-          <p className="p-2 bg-red-600 text-white rounded">{error.message}</p>
+        {state?.message && (
+          <p className="p-2 bg-red-600 text-white rounded">{state?.message}</p>
         )}
 
-        <button
-          disabled={isPending}
-          type="submit"
-          className="bg-[#C19B5C] text-white px-6 py-2 rounded w-full hover:opacity-90 transition"
-        >
-          Entrar
-        </button>
+        <SubmitButton className="w-full! justify-center!">Entrar</SubmitButton>
       </form>
       <p className="mt-4 text-center text-sm">
         Não tem conta?{" "}

@@ -2,21 +2,15 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, useWatch } from "react-hook-form";
-import {
-  signUp,
-  SignUpErrors,
-  SignUpInput,
-  SignUpSchema,
-} from "./action/signUp";
+import { signUp, SignUpInput, SignUpSchema } from "./action/signUp";
 import { useMask } from "@react-input/mask";
-import { useMutation } from "@tanstack/react-query";
-import { toast } from "react-toastify";
-import { useRouter } from "next/navigation";
+import { useActionState } from "react";
 
 export default function RegisterPage() {
+  const [state, dispatch, isPending] = useActionState(signUp, { error: {} });
+
   const {
     register,
-    handleSubmit,
     control,
     setValue,
     formState: { errors },
@@ -24,32 +18,15 @@ export default function RegisterPage() {
     resolver: zodResolver(SignUpSchema),
     defaultValues: {
       accountType: "personal",
-    },
-  });
-
-  const router = useRouter();
-
-  const { error, mutateAsync, isPending } = useMutation<
-    void,
-    SignUpErrors,
-    SignUpInput
-  >({
-    mutationKey: ["signUp"],
-    mutationFn: signUp,
-    onSuccess: () => {
-      toast.success("Conta criada com sucesso! Faça login.");
-      router.push("/auth/login");
-    },
-    onError: () => {
-      toast.error("Error ao criar conta verifique suas credenciais.");
+      document: state.raw?.document || "",
+      email: state.raw?.email || "",
+      name: state.raw?.name || "",
+      phone: state.raw?.phone || "",
+      password: state.raw?.password || "",
     },
   });
 
   const accountType = useWatch({ control, name: "accountType" });
-
-  const onSubmit = async (data: SignUpInput) => {
-    await mutateAsync(data);
-  };
 
   const cpfMask = "___.___.___-__";
   const cnpjMask = "__.___.___/____-__";
@@ -70,39 +47,37 @@ export default function RegisterPage() {
       <h1 className="text-3xl font-serif font-bold mb-8 text-center">
         Criar conta no EventoSnap
       </h1>
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+      <form action={dispatch} className="space-y-6">
         <div>
           <label className="block mb-1">Nome</label>
           <input
-            disabled={isPending}
             {...register("name")}
+            disabled={isPending}
             type="text"
             className="w-full px-4 py-2 border rounded"
           />
           {errors.name && (
             <p className="text-red-500 text-sm mt-1">{errors.name.message}</p>
           )}
-          {error?.errors?.name && (
-            <p className="text-red-500 text-sm mt-1">
-              {error?.errors?.name[0]}
-            </p>
+          {state?.error?.name && (
+            <p className="text-red-500 text-sm mt-1">{state?.error?.name[0]}</p>
           )}
         </div>
 
         <div>
           <label className="block mb-1">Email</label>
           <input
-            disabled={isPending}
             {...register("email")}
+            disabled={isPending}
             type="email"
             className="w-full px-4 py-2 border rounded"
           />
           {errors.email && (
             <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>
           )}
-          {error?.errors?.email && (
+          {state?.error?.email && (
             <p className="text-red-500 text-sm mt-1">
-              {error?.errors?.email[0]}
+              {state?.error?.email[0]}
             </p>
           )}
         </div>
@@ -111,6 +86,7 @@ export default function RegisterPage() {
           <label className="block mb-1">Telefone de contato</label>
           <input
             disabled={isPending}
+            {...register("phone")}
             ref={phoneInputRef}
             onChange={(e) => {
               setValue("phone", e.target.value);
@@ -121,9 +97,9 @@ export default function RegisterPage() {
           {errors.phone && (
             <p className="text-red-500 text-sm mt-1">{errors.phone.message}</p>
           )}
-          {error?.errors?.phone && (
+          {state?.error?.phone && (
             <p className="text-red-500 text-sm mt-1">
-              {error?.errors?.phone[0]}
+              {state?.error?.phone[0]}
             </p>
           )}
         </div>
@@ -131,8 +107,8 @@ export default function RegisterPage() {
         <div>
           <label className="block mb-1">Tipo de Conta</label>
           <select
-            disabled={isPending}
             {...register("accountType")}
+            disabled={isPending}
             className="w-full px-4 py-2 border rounded"
           >
             <option value="personal">Pessoa Física</option>
@@ -143,9 +119,9 @@ export default function RegisterPage() {
               {errors.accountType.message}
             </p>
           )}
-          {error?.errors?.accountType && (
+          {state?.error?.accountType && (
             <p className="text-red-500 text-sm mt-1">
-              {error?.errors?.accountType[0]}
+              {state?.error?.accountType[0]}
             </p>
           )}
         </div>
@@ -153,6 +129,7 @@ export default function RegisterPage() {
         <div>
           <label className="block mb-1">Documento</label>
           <input
+            {...register("document")}
             disabled={isPending}
             ref={documentInputRef}
             onChange={(e) => {
@@ -166,14 +143,9 @@ export default function RegisterPage() {
               {errors.document.message}
             </p>
           )}
-          {error?.errors?.document && (
+          {state?.error?.document && (
             <p className="text-red-500 text-sm mt-1">
-              {error?.errors?.document[0]}
-            </p>
-          )}
-          {error?.errors?.documento && (
-            <p className="text-red-500 text-sm mt-1">
-              {error?.errors?.documento[0]}
+              {state?.error?.document[0]}
             </p>
           )}
         </div>
@@ -181,8 +153,8 @@ export default function RegisterPage() {
         <div>
           <label className="block mb-1">Senha</label>
           <input
-            disabled={isPending}
             {...register("password")}
+            disabled={isPending}
             type="password"
             className="w-full px-4 py-2 border rounded"
           />
@@ -191,15 +163,15 @@ export default function RegisterPage() {
               {errors.password.message}
             </p>
           )}
-          {error?.errors?.password && (
+          {state?.error?.password && (
             <p className="text-red-500 text-sm mt-1">
-              {error?.errors?.password[0]}
+              {state?.error?.password[0]}
             </p>
           )}
         </div>
 
-        {error?.message && (
-          <p className="bg-red-500 text-white p-2 rounded">{error.message}</p>
+        {state?.message && (
+          <p className="bg-red-500 text-white p-2 rounded">{state.message}</p>
         )}
 
         <button

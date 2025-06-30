@@ -1,4 +1,5 @@
-import { api } from "@/services/api.service";
+import { redirect } from "next/navigation";
+import { toast } from "react-toastify";
 import z from "zod";
 
 export const SignUpSchema = z.object({
@@ -17,11 +18,11 @@ export const SignUpSchema = z.object({
 export type SignUpInput = z.infer<typeof SignUpSchema>;
 
 export type SignUpErrors = {
-  statusCode: number;
-  message: string;
-  errors: {
+  statusCode?: number;
+  message?: string;
+  raw?: Partial<SignUpInput>;
+  error?: {
     name?: [string];
-    documento?: [string];
     email?: [string];
     phone?: [string];
     accountType?: [string];
@@ -30,16 +31,30 @@ export type SignUpErrors = {
   };
 };
 
-export async function signUp(data: SignUpInput) {
-  try {
-    await api.post("/user", data);
-  } catch (error: any) {
-    if (error.response.data) {
-      console.log(error.response.data);
-      throw error.response.data;
-    }
+export async function signUp(prevState: any, formData: FormData) {
+  const data = Object.fromEntries(formData.entries());
 
-    console.log(error);
-    throw error;
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  });
+
+  if (!res.ok) {
+    const errorData = await res.json();
+
+    console.log(errorData);
+    return {
+      error: errorData.error || {},
+      statusCode: errorData.statusCode || 500,
+      message: errorData.message || "Erro ao realizar cadastro.",
+      raw: data,
+    } as SignUpErrors;
   }
+
+  toast.success("Cadastro realizado com sucesso!");
+
+  redirect("/auth/login");
 }

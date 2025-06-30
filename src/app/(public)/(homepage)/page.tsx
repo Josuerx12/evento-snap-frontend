@@ -1,10 +1,12 @@
-import { plans } from "@/data/plans";
 import { getUser } from "@/services/auth.service";
+import { getPlans } from "@/services/plan/get-plans";
 import Link from "next/link";
 import React from "react";
 
 const HomePage = async () => {
   const user = await getUser();
+
+  const plans = await getPlans({});
 
   return (
     <main className="bg-eventosnap-off-white min-h-screen text-eventosnap-dark animate-fade-in">
@@ -46,26 +48,41 @@ const HomePage = async () => {
                 Escolha seu plano
               </h2>
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
-                {plans.map((plano, idx) => (
+                {plans?.items?.map((plano, idx) => (
                   <div
                     key={idx}
                     className="rounded-xl border border-eventosnap-gold bg-eventosnap-off-white p-6 shadow-lg hover:shadow-2xl transition duration-300 animate-fade-in"
                   >
                     <h3 className="text-2xl font-serif font-bold mb-2 text-eventosnap-dark">
-                      {plano.nome}
+                      {plano.name}
                     </h3>
-                    <p className="text-lg mb-1">{plano.fotos}</p>
-                    <p className="text-lg mb-4">{plano.duracao}</p>
-                    <ul className="mb-4 text-sm list-disc list-inside space-y-1">
-                      {plano.beneficios.map((b, i) => (
-                        <li key={i}>{b}</li>
-                      ))}
-                    </ul>
+                    <p className="text-lg mb-1">
+                      <span>Limite de eventos: </span>
+                      {plano.events}
+                    </p>
+                    <p className="text-lg mb-1">
+                      <span>Limite de fotos: </span>
+                      {plano.photoLimit}
+                    </p>
+                    <p className="text-lg mb-1">
+                      <span>Armazenamento maximo: </span>
+                      {plano.storageLimitMb / 1000 < 1
+                        ? `${plano.storageLimitMb} MB's`
+                        : `${plano.storageLimitMb / 1000} GB's`}
+                    </p>
+                    <p className="text-lg mb-4">
+                      <span>Tempo de duração: </span>
+                      {plano.duration} Dias
+                    </p>
+
                     <p className="text-2xl font-bold text-eventosnap-gold mb-4">
-                      {plano.preco}
+                      {plano.price.toLocaleString("pt-BR", {
+                        style: "currency",
+                        currency: "BRL",
+                      })}
                     </p>
                     <Link
-                      href="/auth/login"
+                      href={"/auth/register?=plan=" + plano.id}
                       className="block text-center bg-eventosnap-gold text-white py-2 rounded hover:opacity-90 transition"
                     >
                       Começar com este plano

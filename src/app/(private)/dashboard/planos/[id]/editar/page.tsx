@@ -3,8 +3,10 @@ import { getPlanById } from "@/services/plan/get-plan-by-id";
 import React from "react";
 import EditPlanForm from "./form/EditPlanForm";
 
-const EditPlanPage = async ({ params }: { params: { id: string } }) => {
-  const { id } = await params;
+const EditPlanPage = async ({ params }: { params: any }) => {
+  const param = await params;
+
+  const { id } = param;
 
   const plan = await getPlanById(id);
 

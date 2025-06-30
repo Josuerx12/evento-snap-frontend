@@ -16,7 +16,7 @@ export default async function middleware(req: NextRequest) {
 
   if (token && pathname.includes("auth")) {
     const url = req.nextUrl.clone();
-    url.pathname = "/galerias";
+    url.pathname = "/galerias/estatisticas";
     return NextResponse.redirect(url);
   }
 
