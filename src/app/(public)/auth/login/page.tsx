@@ -4,6 +4,8 @@ import { useActionState } from "react";
 import { signIn } from "./action/signIn";
 import SubmitButton from "@/components/buttons/SubmitButton";
 
+export const dynamic = "force-dynamic";
+
 export default function LoginPage() {
   const [state, dispatch, isPending] = useActionState(signIn, {});
 

@@ -6,6 +6,8 @@ import { signUp, SignUpInput, SignUpSchema } from "./action/signUp";
 import { useMask } from "@react-input/mask";
 import { useActionState } from "react";
 
+export const dynamic = "force-dynamic";
+
 export default function RegisterPage() {
   const [state, dispatch, isPending] = useActionState(signUp, { error: {} });
 

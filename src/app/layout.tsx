@@ -24,8 +24,6 @@ export const metadata: Metadata = {
     "Compartilhe fotos de eventos e casamentos com seus convidados de forma elegante e prática.",
 };
 
-export const dynamic = "force-dynamic";
-
 export default async function RootLayout({
   children,
 }: Readonly<{
