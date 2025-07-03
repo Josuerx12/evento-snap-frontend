@@ -4,7 +4,7 @@ import CreateEventForm from "./forms/CreateEventForm";
 
 const CreateEventPage = () => {
   return (
-    <main className="w-full mx-auto p-6">
+    <main className="w-full min-h-screen mx-auto p-6">
       <BackButton />
       <h3 className="text-3xl text-center">Nova Galeria</h3>
 

@@ -33,7 +33,9 @@ const EventsSection = async () => {
         </p>
       )}
 
-      {events.items.length > 0 && <EventTable events={events.items} />}
+      <div className="overflow-x-auto">
+        {events.items.length > 0 && <EventTable events={events.items} />}
+      </div>
     </section>
   );
 };

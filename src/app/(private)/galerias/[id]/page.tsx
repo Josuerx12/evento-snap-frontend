@@ -50,7 +50,8 @@ const EventPage = async ({ params }: { params: any }) => {
             <strong>Nome:</strong> {event.name}
           </p>
           <p>
-            <strong>Dia do evento:</strong> {event.eventDate}
+            <strong>Dia do evento:</strong>{" "}
+            {new Date(event.eventDate).toLocaleString("pt-BR")}
           </p>
           <p>
             <strong>Link para qrCode:</strong> {event.publicToken}
