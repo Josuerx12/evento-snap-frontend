@@ -41,7 +41,14 @@ const EventPage = async ({ params }: { params: any }) => {
 
         <div className="space-y-4 text-gray-700">
           <div>
-            <p>Logo</p>
+            {event.logo && (
+              <img
+                src={event.logo}
+                width={200}
+                height={200}
+                alt="Logo do evento."
+              />
+            )}
           </div>
           <p>
             <strong>ID:</strong> {event.id}
@@ -54,7 +61,20 @@ const EventPage = async ({ params }: { params: any }) => {
             {new Date(event.eventDate).toLocaleString("pt-BR")}
           </p>
           <p>
-            <strong>Link para qrCode:</strong> {event.publicToken}
+            <strong>Link do Evento: </strong>
+            <Link
+              className="text-blue-600 hover:text-blue-500"
+              target="_blank"
+              href={"/evento/" + event.id + "/" + event.publicToken}
+            >
+              Clique Aqui.
+            </Link>
+          </p>
+          <p>
+            <strong>QR Code: </strong>{" "}
+            <Link className="text-blue-600 hover:text-blue-500" href={""}>
+              Gerar QR Code.
+            </Link>
           </p>
           <p>
             <strong>Galeria:</strong>{" "}

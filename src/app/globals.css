@@ -53,13 +53,3 @@ th {
   padding: 0.4rem;
   border: 1px solid #2e2f32;
 }
-
-input {
-  padding: 0.4rem;
-  border: 1px solid #2e2f32;
-  border-radius: 0.25rem;
-  font-family: "Inter", sans-serif;
-  font-weight: 400;
-  color: #2e2f32;
-  background: #f9f5ef;
-}

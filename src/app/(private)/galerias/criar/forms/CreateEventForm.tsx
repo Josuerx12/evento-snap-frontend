@@ -3,6 +3,7 @@ import React, { useActionState, useState } from "react";
 import { CreateEventAction } from "../actions/create-event.action";
 import SubmitButton from "@/components/buttons/SubmitButton";
 import { Images, ImagePlus } from "lucide-react";
+import Input from "@/components/form/Input";
 
 const CreateEventForm = () => {
   const [state, action, isPending] = useActionState(CreateEventAction, {});
@@ -24,13 +25,11 @@ const CreateEventForm = () => {
         <span className="text-sm font-medium text-gray-700 mb-1 block">
           Nome do evento:
         </span>
-        <input
+        <Input
           type="text"
           name="name"
           defaultValue={state?.data?.name}
           disabled={isPending}
-          required
-          className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
         {state?.error?.name && (
           <p className="text-red-500 text-sm mt-1">{state.error.name}</p>
@@ -47,7 +46,6 @@ const CreateEventForm = () => {
           defaultValue={state?.data?.description}
           rows={4}
           disabled={isPending}
-          required
           className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
         {state?.error?.description && (
@@ -60,13 +58,11 @@ const CreateEventForm = () => {
         <span className="text-sm font-medium text-gray-700 mb-1 block">
           Data do evento:
         </span>
-        <input
+        <Input
           defaultValue={state?.data?.eventDate}
           name="eventDate"
           type="datetime-local"
           disabled={isPending}
-          required
-          className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
         {state?.error?.eventDate && (
           <p className="text-red-500 text-sm mt-1">{state.error.eventDate}</p>
@@ -81,7 +77,7 @@ const CreateEventForm = () => {
             Clique para selecionar a logo do evento
           </span>
         </div>
-        <input
+        <Input
           id="logo"
           name="logo"
           type="file"
