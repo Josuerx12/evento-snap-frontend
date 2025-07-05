@@ -3,6 +3,7 @@ import { UserOutput } from "./user.type";
 export type EventOutput = {
   id: string;
   name: string;
+  logo?: string;
   description: string;
   eventDate: string;
   publicToken: string;

@@ -11,9 +11,17 @@ export type CreateEventErrorsT = {
     description?: [string];
     eventDate?: [string];
   };
+  data?: {
+    name?: string;
+    description?: string;
+    eventDate?: string;
+  };
 };
 
-export async function CreateEventAction(_: any, plan: FormData) {
+export async function CreateEventAction(
+  _: any,
+  plan: FormData
+): Promise<CreateEventErrorsT> {
   const data = Object.fromEntries(plan.entries());
 
   const Cookies = await cookies();
@@ -23,16 +31,18 @@ export async function CreateEventAction(_: any, plan: FormData) {
   const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/events`, {
     method: "POST",
     headers: {
-      "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
     },
-    body: JSON.stringify(data),
+    body: plan,
   });
 
   if (!response.ok) {
     const errorData = await response.json();
     console.log(errorData);
-    return errorData as CreateEventErrorsT;
+    return {
+      ...errorData,
+      data,
+    };
   }
 
   revalidateTag("events");
