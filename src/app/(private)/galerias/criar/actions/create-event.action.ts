@@ -1,11 +1,11 @@
 "use server";
 import { revalidateTag } from "next/cache";
 import { cookies } from "next/headers";
-import { redirect, RedirectType } from "next/navigation";
 
 export type CreateEventErrorsT = {
   message?: string;
   statusCode?: number;
+  successMsg?: string;
   error?: {
     name?: [string];
     description?: [string];
@@ -47,5 +47,7 @@ export async function CreateEventAction(
 
   revalidateTag("events");
 
-  redirect("/galerias/estatisticas", RedirectType.push);
+  return {
+    successMsg: "Galeria criada com sucesso!",
+  };
 }

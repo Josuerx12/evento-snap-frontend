@@ -1,6 +1,7 @@
 import React from "react";
 import { GetEventWithoutAuth } from "../../actions/get-event-without-auth.action";
 import SendPhotoForm from "./Form/SendPhotoForm";
+import Image from "next/image";
 
 const EventoPage = async ({ params }: { params: any }) => {
   const { id, eventToken } = await params;
@@ -12,10 +13,12 @@ const EventoPage = async ({ params }: { params: any }) => {
       <div className="w-full max-w-4xl bg-white shadow-xl rounded-2xl overflow-hidden">
         <div className="bg-eventosnap-dark text-eventosnap-off-white px-8 py-6">
           {event.logo && (
-            <img
+            <Image
+              width={80}
+              height={80}
               src={event.logo}
               alt="Logo do evento"
-              className="object-contain h-20 mb-4"
+              className="object-contain rounded h-20 mb-4"
             />
           )}
           <h1 className="text-2xl font-bold mb-2 text-eventosnap-off-white!">

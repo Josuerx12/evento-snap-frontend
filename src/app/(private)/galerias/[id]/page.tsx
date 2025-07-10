@@ -3,6 +3,7 @@ import { GetEventByIdAction } from "./actions/get-event-by-id.action";
 import BackButton from "@/components/buttons/BackButton";
 import Link from "next/link";
 import { DeleteEventById } from "./actions/delete-event-by-id.action";
+import QRCodeModal from "@/components/modals/QrCodeModal";
 
 const EventPage = async ({ params }: { params: any }) => {
   const param = await params;
@@ -70,12 +71,13 @@ const EventPage = async ({ params }: { params: any }) => {
               Clique Aqui.
             </Link>
           </p>
-          <p>
+          <div>
             <strong>QR Code: </strong>{" "}
-            <Link className="text-blue-600 hover:text-blue-500" href={""}>
-              Gerar QR Code.
-            </Link>
-          </p>
+            <QRCodeModal
+              event={event}
+              url={`${process.env.NEXT_PUBLIC_APP_URL}/evento/${event.id}/${event.publicToken}`}
+            />
+          </div>
           <p>
             <strong>Galeria:</strong>{" "}
             <Link

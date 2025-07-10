@@ -1,19 +1,21 @@
 "use client";
-import React, { useActionState, useEffect, useRef, useState } from "react";
-import { CreateEventAction } from "../actions/create-event.action";
-import SubmitButton from "@/components/buttons/SubmitButton";
-import { Images, ImagePlus } from "lucide-react";
-import Input from "@/components/form/Input";
-import { toast } from "react-toastify";
-import { useRouter } from "next/navigation";
 
-const CreateEventForm = () => {
-  const [state, action, isPending] = useActionState(CreateEventAction, {});
-  const [preview, setPreview] = useState<string | null>(null);
+import SubmitButton from "@/components/buttons/SubmitButton";
+import { EventOutput } from "@/types/event.type";
+import { ImagePlus, Save } from "lucide-react";
+import { useActionState, useEffect, useRef, useState } from "react";
+import { EditEventAction } from "../actions/edit.event.action";
+import Input from "@/components/form/Input";
+import { format } from "date-fns";
+import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
+
+const EditEventForm = ({ event }: { event: EventOutput }) => {
+  const [state, action, isPending] = useActionState(EditEventAction, {});
 
   const router = useRouter();
 
-  const formRef = useRef<HTMLFormElement | null>(null);
+  const [preview, setPreview] = useState<string | null>(null);
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -24,17 +26,20 @@ const CreateEventForm = () => {
     }
   };
 
+  const formRef = useRef<HTMLFormElement | null>(null);
+
   useEffect(() => {
     if (state.successMsg) {
-      toast.success(state.successMsg);
+      toast.success("Evento editado com sucesso!");
       formRef.current?.reset();
       setPreview(null);
-      router.push("/galerias/estatisticas");
+      router.push("/galerias/" + event.id);
     }
   }, [state]);
 
   return (
     <form ref={formRef} className="flex flex-col gap-6" action={action}>
+      <input type="hidden" name="id" value={event.id} />
       {/* Nome do evento */}
       <label>
         <span className="text-sm font-medium text-gray-700 mb-1 block">
@@ -43,7 +48,7 @@ const CreateEventForm = () => {
         <Input
           type="text"
           name="name"
-          defaultValue={state?.data?.name}
+          defaultValue={event.name}
           disabled={isPending}
         />
         {state?.error?.name && (
@@ -58,7 +63,7 @@ const CreateEventForm = () => {
         </span>
         <textarea
           name="description"
-          defaultValue={state?.data?.description}
+          defaultValue={event.description}
           rows={4}
           disabled={isPending}
           className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -74,7 +79,7 @@ const CreateEventForm = () => {
           Data do evento:
         </span>
         <Input
-          defaultValue={state?.data?.eventDate}
+          defaultValue={format(new Date(event.eventDate), "yyyy-MM-dd'T'HH:mm")}
           name="eventDate"
           type="datetime-local"
           disabled={isPending}
@@ -89,7 +94,7 @@ const CreateEventForm = () => {
         <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 flex flex-col items-center justify-center gap-2 transition hover:bg-gray-50 group-hover:border-blue-500">
           <ImagePlus className="w-8 h-8 text-gray-400 group-hover:text-blue-500" />
           <span className="text-sm text-gray-600 group-hover:text-blue-600">
-            Clique para selecionar a logo do evento
+            Clique para adicionar uma nova ou atualizar a logo do evento
           </span>
         </div>
         <Input
@@ -120,11 +125,11 @@ const CreateEventForm = () => {
       )}
 
       {/* Botão */}
-      <SubmitButton className="w-fit" icon={<Images className="w-6 h-6" />}>
-        Criar Galeria
+      <SubmitButton className="w-fit" icon={<Save className="w-6 h-6" />}>
+        Editar Galeria
       </SubmitButton>
     </form>
   );
 };
 
-export default CreateEventForm;
+export default EditEventForm;

@@ -3,6 +3,7 @@ import { InputHTMLAttributes, ReactNode } from "react";
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   children?: ReactNode;
+  ref?: any;
 }
 
 const Input = (props: InputProps) => {
