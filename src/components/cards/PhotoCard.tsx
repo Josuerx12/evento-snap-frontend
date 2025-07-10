@@ -21,7 +21,7 @@ const PhotoCard = ({ p }: { p: PhotoOutput }) => {
   return (
     <div
       key={p.id}
-      className="bg-eventosnap-cream border min-h-[400px] max-w-xs border-eventosnap-gold rounded-xl shadow-lg p-2 flex flex-col group hover:shadow-xl transition"
+      className="relative bg-eventosnap-cream border min-h-[400px] max-w-xs border-eventosnap-gold rounded-xl shadow-lg p-2 flex flex-col group hover:shadow-xl transition"
     >
       <DeletePhotoForm photo={p} />
       <div className="relative w-full h-[250px] bg-white rounded-lg overflow-hidden flex items-center justify-center">
